@@ -1,11 +1,14 @@
 #!/usr/bin/clibasic
 
 ########################################
+##                                    ##
 ## Snake for CLIBASIC by PQCraft 2021 ##
+##                                    ##
+########################################
+## W,A,S,D to move; ESC,Q to exit     ##
 ########################################
 
-## W,A,S,D to move, ESC,Q to exit
-########################################
+## Config: #############################
 
 ## Starting length
 # <1 = Auto
@@ -84,7 +87,7 @@ color cc
 @draw
 locate ox*2+4,oy+3:color ac:?ac$;
 if sd=1:locate fx*2+4,fy+3:color fc:?fc$;:sd=0:endif
-color shc:tp=p:locate x[tp]*2+4,y[tp]+3:?sc$:color sbc:for tl,1,tl<l,1:tp=mod(tp+1,l):locate x[tp]*2+4,y[tp]+3:?sc$;:next
+tp=mod(p+1,l):color sbc:for tl,1,tl<l,1:tp=mod(tp+1,l):locate x[tp]*2+4,y[tp]+3:?sc$;:next:color shc:locate x[tp]*2+4,y[tp]+3:?sc$
 color btc:locate 14,h+3:?s;" "
 return
 @score
