@@ -33,5 +33,6 @@ do
         locate 1, h
         waitms 20 * v
     next
+    exit
 loop
 
