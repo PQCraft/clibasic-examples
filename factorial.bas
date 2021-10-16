@@ -1,3 +1,5 @@
+#!/usr/bin/env clibasic
+
 IF _arg$() = ""
     str=INPUT$("Enter a factorial number: ")
 ELSE

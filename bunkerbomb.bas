@@ -1,3 +1,5 @@
+#!/usr/bin/env clibasic
+
 @ again
 set i$, input$("Bomb le bunker? 💣 [Y/n]: ")
 i$=ucase$(snip$(i$, 1))

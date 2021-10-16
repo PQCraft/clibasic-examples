@@ -1,3 +1,5 @@
+#!/usr/bin/env clibasic
+
 do
     set e, cint(rand(31, 126))
     set c, cint(rand(1))

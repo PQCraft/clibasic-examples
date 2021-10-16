@@ -1,3 +1,5 @@
+#!/usr/bin/env clibasic
+
 print "begin"
 i = 0
 for i, 0, i < 4, 1

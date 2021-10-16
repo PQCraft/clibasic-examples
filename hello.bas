@@ -1,3 +1,5 @@
+#!/usr/bin/env clibasic
+
 _TXTLOCK
 _TXTATTRIB "TRUECOLOR", 1
 OC = FGC()

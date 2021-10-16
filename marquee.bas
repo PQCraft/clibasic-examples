@@ -1,3 +1,5 @@
+#!/usr/bin/env clibasic
+
 # -- config --
 direction$="L"
 inplace=1

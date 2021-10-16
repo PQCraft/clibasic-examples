@@ -1,3 +1,5 @@
+#!/usr/bin/env clibasic
+
 'clibasic test program
 
 print "test"

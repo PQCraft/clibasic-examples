@@ -1,3 +1,5 @@
+#!/usr/bin/env clibasic
+
 i = 0.45 + rand(0.1)
 v = 0.99
 f = 0.8
@@ -33,6 +35,5 @@ do
         locate 1, h
         waitms 20 * v
     next
-    exit
 loop
 

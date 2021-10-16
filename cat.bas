@@ -1,3 +1,5 @@
+#!/usr/bin/env clibasic
+
 _txtattrib "fgc", "off"
 if _argc() <> 1: print "Expected 1 argument, recieved "; _argc(); " arguments instead": exit 1: endif
 del file

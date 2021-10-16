@@ -1,3 +1,5 @@
+#!/usr/bin/env clibasic
+
 _txtattrib "bgc", "on"
 do
     color cint(rand(255)), cint(rand(255))

@@ -1,3 +1,5 @@
+#!/usr/bin/env clibasic
+
 max = 5000
 x = 1: y = 1
 @loop

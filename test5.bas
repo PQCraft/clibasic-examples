@@ -1,3 +1,5 @@
+#!/usr/bin/env clibasic
+
 _txtattrib "bgc", 1
 _txtlock
 do

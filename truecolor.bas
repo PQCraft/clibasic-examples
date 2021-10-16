@@ -1,3 +1,5 @@
+#!/usr/bin/env clibasic
+
 r = limit(val(input$("red:   ")), 0, 255)
 g = limit(val(input$("green: ")), 0, 255)
 b = limit(val(input$("blue:  ")), 0, 255)

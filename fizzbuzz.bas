@@ -1,3 +1,5 @@
+#!/usr/bin/env clibasic
+
 count=0
 while count < 100
     count=count+1: a=mod(count, 15): b=mod(count, 3): c=mod(count, 5)

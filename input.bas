@@ -1,3 +1,5 @@
+#!/usr/bin/env clibasic
+
 PRINT "Press Ctrl+C to exit..."
 DO
     K$ = INKEY$()

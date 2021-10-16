@@ -1,4 +1,5 @@
-#!/usr/bin/clibasic -x
+#!/usr/bin/env clibasic
+
 PRINT "location: " + _ARG$(0)
 PRINT "args: " + _ARG$()
 FOR I, 1, I < _ARGC(), 1

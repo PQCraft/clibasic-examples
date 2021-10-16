@@ -1,3 +1,5 @@
+#!/usr/bin/env clibasic
+
 count=99
 while count > 1
     print count; " bottles of beer on the wall, "; count; " bottles of beer."

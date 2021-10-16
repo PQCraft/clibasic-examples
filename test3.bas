@@ -1,3 +1,5 @@
+#!/usr/bin/env clibasic
+
 _txtlock
 do
   'print "Polling..."
