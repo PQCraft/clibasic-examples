@@ -42,6 +42,7 @@ if l<1: l=cint((w*h)/250):endif
 p=l-1
 dim x, l-1, cint(rand(w-1))
 dim y, l-1, cint(rand(h-1))
+dim a, w*h
 fx=cint(rand(w-1))
 fy=cint(rand(h-1))
 ox=x[p]
@@ -89,8 +90,15 @@ _txtattrib "bold"
 if c=0: _txtattrib "fgc", 0: endif
 
 if 1=0 'a little trick due to LABEL being run unconditionally ;)
+@die
+btc=btdc:ac=adc:gosub redraw
+wait 0.33
+de=0:k$=inkey$()
+sec=timer()
+while de=0:wait 0.1:if inkey$()<>""|timerms()/1000-sec>3.66:de=1:endif:loop
+gosub _exit
 @chkdie
-for tl,0,tl<l,1:tx=x[p]:ty=y[p]:if tl<>p&tx=x[tl]&ty=y[tl]:btc=btdc:ac=adc:gosub redraw:gosub _exit:endif:next
+if a[x[p]+y[p]*w]=1:gosub die:endif
 return
 @redraw
 color bc:locate 3,2:?g1$;g5$;g5$;:color btc:?" Snake for CLIBASIC ";:color bc:for dl,44,dl<tw,1:?g5$;:next:color btc:?" 2021 PQCraft ";:color bc:?g5$;g5$;g2$
@@ -100,20 +108,19 @@ locate 1,3:for dy,0,dy<h,1:color bc:?"  ";g6$;:color ac:for dx,0,dx<w,1:?ac$;:ne
 tp=p-1:if tp<0:tp=l-1:endif
 otx=x[p]:oty=y[p]
 color sbc
-for tl,1,tl<l,1:ntx=x[tp]:nty=y[tp]:if ntx=otx&nty=oty:break:endif:locate ntx*2+4,nty+3:otx=ntx:oty=nty:?sc$;:tp=tp-1:if tp<0:tp=l-1:endif:next
+for tl,1,tl<l,1:ntx=x[tp]:nty=y[tp]:if ntx=otx&nty=oty:tl=l:else:locate ntx*2+4,nty+3:otx=ntx:oty=nty:?sc$;:tp=tp-1:if tp<0:tp=l-1:endif:endif:next
 color cc
 @draw
 locate fx*2+4,fy+3:color fc:?fc$;
-locate ox*2+4,oy+3:color ac:?ac$;
+locate ox*2+4,oy+3:color ac:?ac$;:a[ox+oy*w]=0
 tp=p-1:if tp<0:tp=l-1:endif
-color sbc:locate x[tp]*2+4,y[tp]+3:?sc$;
+color sbc:locate x[tp]*2+4,y[tp]+3:?sc$;:a[x[tp]+y[tp]*w]=1':?"::";x[tp]+y[tp]*(w+1);"::"
 tp=mod(p+1,l)
-color sbc:locate x[tp]*2+4,y[tp]+3:?sc$;
-color shc:locate x[p]*2+4,y[p]+3:?sc$
+color sbc:locate x[tp]*2+4,y[tp]+3:?sc$;:a[x[tp]+y[tp]*w]=1
+color shc:locate x[p]*2+4,y[p]+3:?sc$:'a[x[p]+y[p]*w]=0
 color btc:locate 14,h+3:?s;" "
 return
 @score
-o=0
 sd=1
 s=s+1
 fx=cint(rand(w-1))
@@ -129,9 +136,13 @@ del nx, ny
 p=l
 l=l+1
 return
+@pausesub
+if ps=1:gosub redraw:t=timems():while timems()-t<500&ps=1:if inkey$()=" ":waitms limit(ms,250):ps=0:endif:loop:endif
+return
 @pause
 tac=ac
-do:ac=apc1:if inkey$()=" ":break:endif:gosub redraw:wait 0.5:ac=apc2:if inkey$()=" ":break:endif:gosub redraw:wait 0.5:loop
+ps=1
+do:ac=apc1:gosub pausesub:ac=apc2:gosub pausesub:loopwhile ps=1
 ac=tac
 gosub redraw
 return
@@ -139,9 +150,11 @@ return
 tmph=height()
 us=2000000/tmph
 _txtattrib "fgc", 0
-vt=_vt()
+csb=~(_vt()=1&snip$(sh$("tty"),8)<>"/dev/tty")
+k$=inkey$()
 for i,0,i<tmph,1
-waitus us:?:if vt=1:put "\e[3J":endif
+waitus us:?:if csb=1:put "\e[3J":endif
+if inkey$()<>"":i=tmph:endif
 next
 cls
 exit
@@ -164,6 +177,7 @@ elseif c$=" ":gosub pause
 elseif c$="\e"|c$="q":gosub _exit
 endif
 if o=0:o=1:else:gosub chkdie:endif
+'a[tx+ty*w]=1
 tx=x[p]
 ty=y[p]
 if d=0
@@ -184,5 +198,7 @@ ox=x[p]
 oy=y[p]
 y[p]=ty
 x[p]=tx
+a[ox+oy*w]=0
 waitms limit(ms-timerms(),0,ms)
 loop
+
