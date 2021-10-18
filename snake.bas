@@ -13,7 +13,7 @@
 
 ## Starting length
 # < 1 = Auto
-l = 0
+l = 100
 
 ## Delay between moves in milliseconds
 ms = 100
@@ -114,9 +114,10 @@ color cc
 locate fx*2+4,fy+3:color fc:?fc$;
 locate ox*2+4,oy+3:color ac:?ac$;:a[ox+oy*w]=0
 tp=p-1:if tp<0:tp=l-1:endif
-color sbc:locate x[tp]*2+4,y[tp]+3:?sc$;:a[x[tp]+y[tp]*w]=1':?"::";x[tp]+y[tp]*(w+1);"::"
+v=~(l>1)
+color sbc:locate x[tp]*2+4,y[tp]+3:?sc$;:a[x[tp]+y[tp]*w]=v
 tp=mod(p+1,l)
-color sbc:locate x[tp]*2+4,y[tp]+3:?sc$;:a[x[tp]+y[tp]*w]=1
+color sbc:locate x[tp]*2+4,y[tp]+3:?sc$;:a[x[tp]+y[tp]*w]=v
 color shc:locate x[p]*2+4,y[p]+3:?sc$:'a[x[p]+y[p]*w]=0
 color btc:locate 14,h+3:?s;" "
 return
@@ -138,6 +139,7 @@ l=l+1
 return
 @pausesub
 if ps=1:gosub redraw:t=timems():while timems()-t<500&ps=1:if inkey$()=" ":waitms limit(ms,250):ps=0:endif:loop:endif
+resettimer
 return
 @pause
 tac=ac
@@ -165,7 +167,6 @@ gosub redraw
 do
 resettimer
 if x[p]=fx&y[p]=fy:gosub score:endif
-gosub draw
 k$=inkey$()
 k=len(k$)
 c$=snip$(k$,k-1,k)
@@ -176,8 +177,6 @@ elseif d<>2&~(c$="d"|k$="\e[C"|k$="\xE0M")=1:d=3
 elseif c$=" ":gosub pause
 elseif c$="\e"|c$="q":gosub _exit
 endif
-if o=0:o=1:else:gosub chkdie:endif
-'a[tx+ty*w]=1
 tx=x[p]
 ty=y[p]
 if d=0
@@ -199,6 +198,8 @@ oy=y[p]
 y[p]=ty
 x[p]=tx
 a[ox+oy*w]=0
+gosub draw
+gosub chkdie
 waitms limit(ms-timerms(),0,ms)
 loop
 
