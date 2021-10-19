@@ -104,6 +104,7 @@ endif
 _txtlock
 _txtattrib "bold"
 if c=0: _txtattrib "fgc", 0: endif
+cc=fgc()
 
 if 1=0
 @die
@@ -120,7 +121,6 @@ return
 color bc:locate 3,2:?g1$;g5$;g5$;:color btc:?" Snake for CLIBASIC ";:color bc:for dl,44,dl<tw,1:?g5$;:next:color btc:?" 2021 PQCraft ";:color bc:?g5$;g5$;g2$
 tmph=height():us=2000000/tmph
 locate 1,3:for dy,0,dy<h,1:tmpus=timeus():color bc:?"  ";g6$;:color ac:for dx,0,dx<w,1:?ac$;:next:color bc:?g6$:while timeus()-tmpus<us:if inkey$()<>"":us=0:endif:loop:next
-cc=fgc()
 ?"  ";g3$;g5$;g5$;:color btc:?" Score: ";:s$=str$(s)+" ":dl=len(s$)+16:?s$;:color bc:for dl,dl,dl<tw,1:?g5$;:next:?g4$
 tp=p-1:if tp<0:tp=l-1:endif
 otx=x[p]:oty=y[p]
@@ -132,13 +132,12 @@ waitms limit(ms,500,)
 return
 @redraw
 color bc:locate 3,2:?g1$;g5$;g5$;:color btc:?" Snake for CLIBASIC ";:color bc:for dl,44,dl<tw,1:?g5$;:next:color btc:?" 2021 PQCraft ";:color bc:?g5$;g5$;g2$
-gosub drawc
-cc=fgc()
 color ac
 dx=fx:dy=y[p]
 if a[dx+dy*w]=0:locate dx*2+4,dy+3:?ac$;:endif
 dx=x[p]:dy=fy
 if a[dx+dy*w]=0:locate dx*2+4,dy+3:?ac$;:endif
+gosub drawc
 locate 1,3
 for dy,0,dy<h,1
 color bc:?"  ";g6$;:color ac
@@ -214,6 +213,7 @@ gosub dredraw
 do
 resettimer
 k$=inkey$()
+'ok$=k$
 k=len(k$)
 if _os$()<>"Windows"
 for i,0,i<k,1
@@ -226,12 +226,15 @@ elseif tk$="\e[C":tk$="d"
 else: tk$=""
 endif
 k$=snip$(k$,i)+tk$+snip$(k$,i+3,)
+ntkl=len(tk$)
+i=i-(ntkl-otkl)
 endif
 next
 else
 for i,0,i<k,1
 if asc(k$,i)=27
 tk$=snip$(k$,i,i+2)
+otkl=len(tk$)
 if k$="\xE0H":k$="w"
 elseif k$="\xE0P":k$="s"
 elseif k$="\xE0K":k$="a"
@@ -239,11 +242,25 @@ elseif k$="\xE0M":k$="d"
 else: tk$=""
 endif
 k$=snip$(k$,i)+tk$+snip$(k$,i+2,)
+ntkl=len(tk$)
+i=i-(ntkl-otkl)
 endif
 next
 endif
-if k$<>""&asc(k$)=asc(k$,1):gk$=snip$(k$,1):else:gk$=gk$+k$:endif
-gc$=snip$(gk$,1)
+k=len(k$)
+nk$=""
+for i,0,i<k,1
+nc$=snip$(k$,i,i+1)
+if nc$="w"|nc$="a"|nc$="s"|nc$="d"|nc$="q"|nc$=" ":nk$=nk$+nc$:endif
+next
+k$=nk$
+do
+if k$="":break:endif
+if asc(k$)=asc(gk$,1):k$=snip$(k$,1,):gk$=k$:else:gk$=gk$+k$:break:endif
+loop
+if len(gk$)>0:gc$=snip$(gk$,1):endif
+color cc
+'?"["+pad$(ok$,8)+"]:"+pad$(gc$,1)+":["+pad$(gk$,8)+"]\e[0K";
 if d<>1&gc$="w":d=0
 elseif d<>0&gc$="s":d=1
 elseif d<>3&gc$="a":d=2
@@ -251,6 +268,7 @@ elseif d<>2&gc$="d":d=3
 elseif gc$=" ":gosub pause
 elseif gc$="\e"|gc$="q":gosub _exit
 endif
+gc$=""
 gk$=snip$(gk$,1,)
 tx=x[p]
 ty=y[p]
@@ -278,4 +296,3 @@ gosub draw
 gosub chkdie
 waitms limit(ms-timerms(),0,ms)
 loop
-
