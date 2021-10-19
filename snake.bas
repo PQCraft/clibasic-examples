@@ -28,7 +28,7 @@ h = 0
 c = 1
 
 ## Extended ASCII on Windows
-# 0 = Disabled (7-bit ASCII), <> 0 = Enabled (8-bit ASCII)
+# 0 = Disabled, <> 0 = Enabled
 wea = 1
 
 ############################################
@@ -80,7 +80,7 @@ g5$="\xCD"
 g6$="\xBA"
 else
 ac$="::"
-sc$="##"
+sc$="()"
 fc$="[]"
 g1$="."
 g2$="."
@@ -119,7 +119,7 @@ return
 @dredraw
 color bc:locate 3,2:?g1$;g5$;g5$;:color btc:?" Snake for CLIBASIC ";:color bc:for dl,44,dl<tw,1:?g5$;:next:color btc:?" 2021 PQCraft ";:color bc:?g5$;g5$;g2$
 tmph=height():us=2000000/tmph
-locate 1,3:for dy,0,dy<h,1:color bc:?"  ";g6$;:color ac:for dx,0,dx<w,1:?ac$;:next:color bc:?g6$:waitus us:next
+locate 1,3:for dy,0,dy<h,1:tmpus=timeus():color bc:?"  ";g6$;:color ac:for dx,0,dx<w,1:?ac$;:next:color bc:?g6$:while timeus()-tmpus<us:if inkey$()<>"":us=0:endif:loop:next
 cc=fgc()
 ?"  ";g3$;g5$;g5$;:color btc:?" Score: ";:s$=str$(s)+" ":dl=len(s$)+16:?s$;:color bc:for dl,dl,dl<tw,1:?g5$;:next:?g4$
 tp=p-1:if tp<0:tp=l-1:endif
@@ -128,13 +128,27 @@ color sbc
 wait 0.5
 gosub drawc
 color cc
-wait 0.5
+waitms limit(ms,500,)
 return
 @redraw
 color bc:locate 3,2:?g1$;g5$;g5$;:color btc:?" Snake for CLIBASIC ";:color bc:for dl,44,dl<tw,1:?g5$;:next:color btc:?" 2021 PQCraft ";:color bc:?g5$;g5$;g2$
 gosub drawc
 cc=fgc()
-locate 1,3:for dy,0,dy<h,1:color bc:?"  ";g6$;:color ac:for dx,0,dx<w,1:if ~(dx=fx&dy=fy)=1|~(dx=x[p]&dy=y[p])=1|a[dx+dy*w]=1:rlocate 2:else:?ac$;:endif:next:color bc:?g6$:next
+color ac
+dx=fx:dy=y[p]
+if a[dx+dy*w]=0:locate dx*2+4,dy+3:?ac$;:endif
+dx=x[p]:dy=fy
+if a[dx+dy*w]=0:locate dx*2+4,dy+3:?ac$;:endif
+locate 1,3
+for dy,0,dy<h,1
+color bc:?"  ";g6$;:color ac
+if dy=fy|dy=y[p]
+for dx,0,dx<w,1:if dx=fx|dx=x[p]|a[dx+dy*w]=1:rlocate 2:else:?ac$;:endif:next
+else
+for dx,0,dx<w,1:if a[dx+dy*w]=1:rlocate 2:else:?ac$;:endif:next
+endif
+color bc:?g6$
+next
 ?"  ";g3$;g5$;g5$;:color btc:?" Score: ";:s$=str$(s)+" ":dl=len(s$)+16:?s$;:color bc:for dl,dl,dl<tw,1:?g5$;:next:?g4$
 tp=p-1:if tp<0:tp=l-1:endif
 otx=x[p]:oty=y[p]
@@ -144,13 +158,13 @@ return
 @draw
 locate ox*2+4,oy+3:color ac:?ac$;:a[ox+oy*w]=0
 @drawc
-locate fx*2+4,fy+3:color fc:?fc$;
 tp=p-1:if tp<0:tp=l-1:endif
 v=~(l>1)
 color sbc:locate x[tp]*2+4,y[tp]+3:?sc$;:a[x[tp]+y[tp]*w]=v
 tp=mod(p+1,l)
 color sbc:locate x[tp]*2+4,y[tp]+3:?sc$;:a[x[tp]+y[tp]*w]=v
 color shc:locate x[p]*2+4,y[p]+3:?sc$:
+locate fx*2+4,fy+3:color fc:?fc$;
 color btc:locate 14,h+3:?s;" "
 return
 @score
@@ -170,7 +184,7 @@ p=l
 l=l+1
 return
 @pausesub
-if ps=1:gosub redraw:t=timems():while timems()-t<500&ps=1:if inkey$()=" ":waitms limit(ms,250):ps=0:endif:loop:endif
+if ps=1:gosub redraw:t=timems():while timems()-t<500&ps=1:k$=inkey$():if k$=" ":waitms limit(ms,250):ps=0:elseif k$="q":gosub _exit:endif:loop:endif
 return
 @pause
 tac=ac
@@ -186,28 +200,58 @@ _txtattrib "fgc", 0
 csb=~(_vt()=1&snip$(sh$("tty"),8)<>"/dev/tty")
 k$=inkey$()
 for i,0,i<tmph,1
-waitus us:?:if csb=1:put "\e[3J":endif
+tmpus=timeus()
+while timeus()-tmpus<us:loop
+?:if csb=1:put "\e[3J":endif
 if inkey$()<>"":break:endif
 next
 cls
-exit
+exit 'remove to enter the shadow realm
 endif
 
 o=0
 gosub dredraw
 do
 resettimer
-if x[p]=fx&y[p]=fy:gosub score:endif
 k$=inkey$()
 k=len(k$)
-c$=snip$(k$,k-1,k)
-if d<>1&~(c$="w"|k$="\e[A"|k$="\xE0H")=1:d=0
-elseif d<>0&~(c$="s"|k$="\e[B"|k$="\xE0P")=1:d=1
-elseif d<>3&~(c$="a"|k$="\e[D"|k$="\xE0K")=1:d=2
-elseif d<>2&~(c$="d"|k$="\e[C"|k$="\xE0M")=1:d=3
-elseif c$=" ":gosub pause
-elseif c$="\e"|c$="q":gosub _exit
+if _os$()<>"Windows"
+for i,0,i<k,1
+if asc(k$,i)=27
+tk$=snip$(k$,i,i+3)
+if tk$="\e[A":tk$="w"
+elseif tk$="\e[B":tk$="s"
+elseif tk$="\e[D":tk$="a"
+elseif tk$="\e[C":tk$="d"
+else: tk$=""
 endif
+k$=snip$(k$,i)+tk$+snip$(k$,i+3,)
+endif
+next
+else
+for i,0,i<k,1
+if asc(k$,i)=27
+tk$=snip$(k$,i,i+2)
+if k$="\xE0H":k$="w"
+elseif k$="\xE0P":k$="s"
+elseif k$="\xE0K":k$="a"
+elseif k$="\xE0M":k$="d"
+else: tk$=""
+endif
+k$=snip$(k$,i)+tk$+snip$(k$,i+2,)
+endif
+next
+endif
+if k$<>""&asc(k$)=asc(k$,1):gk$=snip$(k$,1):else:gk$=gk$+k$:endif
+gc$=snip$(gk$,1)
+if d<>1&gc$="w":d=0
+elseif d<>0&gc$="s":d=1
+elseif d<>3&gc$="a":d=2
+elseif d<>2&gc$="d":d=3
+elseif gc$=" ":gosub pause
+elseif gc$="\e"|gc$="q":gosub _exit
+endif
+gk$=snip$(gk$,1,)
 tx=x[p]
 ty=y[p]
 if d=0
@@ -229,6 +273,7 @@ oy=y[p]
 y[p]=ty
 x[p]=tx
 a[ox+oy*w]=0
+if x[p]=fx&y[p]=fy:gosub score:endif
 gosub draw
 gosub chkdie
 waitms limit(ms-timerms(),0,ms)
