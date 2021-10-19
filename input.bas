@@ -6,7 +6,7 @@ DO
     L = LEN(K$)
     IF ASC(K$) <> 0
         LOCATE 16
-        IF ASC(K$, LEN(K$) - 1) = 10: LOCATE , CURY() - 1: ENDIF
+        IF ASC(K$, LEN(K$) - 1) = 10: RLOCATE , -1: ENDIF
         PUT LEN(K$), ": ["
         FOR P, 0, P < L, 1
             IF P > 0: PUT ", ": ENDIF
@@ -38,7 +38,6 @@ DO
                 STR$ = STR$ + C$
             ENDIF
         NEXT
-        PUT ": {", STR$, "}"
-        PUT "\n"
+        PUT ": {", STR$, "}\n"
     ENDIF
 LOOP

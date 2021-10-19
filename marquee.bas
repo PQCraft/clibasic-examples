@@ -10,7 +10,7 @@ bg=0
 # ------------
 if _argc()=0
     ostr$=input$("Text: ")
-    locate ,-1
+    rlocate ,-1
 else
     ostr$=_arg$()
 endif
@@ -63,7 +63,7 @@ do
     if _os$()="Windows"
         if inplace<>0:locate ,cy:else:locate ,cy+1:cy=cury():endif
     else
-        if inplace<>0:locate ,-1:endif
+        if inplace<>0:rlocate ,-1:endif
     endif
     if width()<>w:goto refresh:endif
 loop

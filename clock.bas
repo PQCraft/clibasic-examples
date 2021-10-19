@@ -17,5 +17,5 @@ do
     s = date(0)
     waitms 900
     while date(0) = s: loop
-    locate , -1
+    rlocate , -1
 loop
