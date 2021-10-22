@@ -31,6 +31,10 @@ c = 1
 # 0 = Disabled, <> 0 = Enabled
 wea = 1
 
+## Debug
+# 0 = Disabled, <> 0 = Enabled
+debug = 0
+
 ############################################
 
 
@@ -115,7 +119,7 @@ sec=timer()
 while de=0:wait 0.1:if inkey$()<>""|timerms()/1000-sec>3.66:break:endif:loop
 gosub _exit
 @chkdie
-if a[x[p]+y[p]*w]=1:gosub die:endif
+if a[x[p]+y[p]*w]:gosub die:endif
 return
 @dredraw
 color bc:locate 3,2:?g1$;g5$;g5$;:color btc:?" Snake for CLIBASIC ";:color bc:for dl,44,dl<tw,1:?g5$;:next:color btc:?" 2021 PQCraft ";:color bc:?g5$;g5$;g2$
@@ -133,18 +137,18 @@ return
 @redraw
 color bc:locate 3,2:?g1$;g5$;g5$;:color btc:?" Snake for CLIBASIC ";:color bc:for dl,44,dl<tw,1:?g5$;:next:color btc:?" 2021 PQCraft ";:color bc:?g5$;g5$;g2$
 color ac
-dx=fx:dy=y[p]
-if a[dx+dy*w]=0:locate dx*2+4,dy+3:?ac$;:endif
-dx=x[p]:dy=fy
-if a[dx+dy*w]=0:locate dx*2+4,dy+3:?ac$;:endif
+'dx=fx:dy=y[p]
+'if a[dx+dy*w]=0:locate dx*2+4,dy+3:?ac$;:endif
+'dx=x[p]:dy=fy
+'if a[dx+dy*w]=0:locate dx*2+4,dy+3:?ac$;:endif
 gosub drawc
 locate 1,3
 for dy,0,dy<h,1
 color bc:?"  ";g6$;:color ac
 if dy=fy|dy=y[p]
-for dx,0,dx<w,1:if dx=fx|dx=x[p]|a[dx+dy*w]=1:rlocate 2:else:?ac$;:endif:next
+for dx,0,dx<w,1:if ~(dx=fx&dy=fy)|~(dx=x[p]&dy=y[p])|a[dx+dy*w]:rlocate 2:else:?ac$;:endif:next
 else
-for dx,0,dx<w,1:if a[dx+dy*w]=1:rlocate 2:else:?ac$;:endif:next
+for dx,0,dx<w,1:if a[dx+dy*w]:rlocate 2:else:?ac$;:endif:next
 endif
 color bc:?g6$
 next
@@ -183,25 +187,26 @@ p=l
 l=l+1
 return
 @pausesub
-if ps=1:gosub redraw:t=timems():while timems()-t<500&ps=1:k$=inkey$():if k$=" ":waitms limit(ms,250):ps=0:elseif k$="q":gosub _exit:endif:loop:endif
+if ps:gosub redraw:t=timems():while timems()-t<500&ps:k$=inkey$():if k$=" ":waitms limit(ms,250):ps=0:elseif k$="q":gosub _exit:endif:loop:endif
 return
 @pause
 tac=ac
 ps=1
-do:ac=apc1:gosub pausesub:ac=apc2:gosub pausesub:loopwhile ps=1
+do:ac=apc1:gosub pausesub:ac=apc2:gosub pausesub:loopwhile ps
 ac=tac
 gosub redraw
+resettimer
 return
 @_exit
 tmph=height()
 us=2000000/tmph
 _txtattrib "fgc", 0
-csb=~(_vt()=1&snip$(sh$("tty"),8)<>"/dev/tty")
+csb=~(_vt()&snip$(sh$("tty"),8)<>"/dev/tty")
 k$=inkey$()
 for i,0,i<tmph,1
 tmpus=timeus()
 while timeus()-tmpus<us:loop
-?:if csb=1:put "\e[3J":endif
+?:if csb:put "\e[3J":endif
 if inkey$()<>"":break:endif
 next
 cls
@@ -213,7 +218,7 @@ gosub dredraw
 do
 resettimer
 k$=inkey$()
-'ok$=k$
+if debug:ok$=k$:endif
 k=len(k$)
 if _os$()<>"Windows"
 for i,0,i<k,1
@@ -260,7 +265,7 @@ if asc(k$)=asc(gk$,1):k$=snip$(k$,1,):gk$=k$:else:gk$=gk$+k$:break:endif
 loop
 if len(gk$)>0:gc$=snip$(gk$,1):endif
 color cc
-'?"["+pad$(ok$,8)+"]:"+pad$(gc$,1)+":["+pad$(gk$,8)+"]\e[0K";
+if debug:?"["+pad$(ok$,8)+"]:"+pad$(gc$,1)+":["+pad$(gk$,8)+"]\e[0K";:endif
 if d<>1&gc$="w":d=0
 elseif d<>0&gc$="s":d=1
 elseif d<>3&gc$="a":d=2
