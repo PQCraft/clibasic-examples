@@ -27,9 +27,9 @@ h = 0
 # 0 = Disabled, <> 0 = Enabled
 c = 1
 
-## Extended ASCII on Windows
+## Extended ASCII
 # 0 = Disabled, <> 0 = Enabled
-wea = 1
+ea = 1
 
 ## Debug
 # 0 = Disabled, <> 0 = Enabled
@@ -48,7 +48,7 @@ tw=(w+2)*2+2:th=h+4
 
 if l<1: l=cint((w*h)/250):endif
 p=l-1
-dim x, l-1, cint(rand(w-1))
+dim x, l-1, w-1'cint(rand(w-1))
 dim y, l-1, cint(rand(h-1))
 dim a, w*h
 fx=cint(rand(w-1))
@@ -56,7 +56,7 @@ fy=cint(rand(h-1))
 ox=x[p]
 oy=y[p]
 s=0
-d=cint(rand(3))
+d=3'cint(rand(3))
 ms=abs(ms)
 sd=1
 
@@ -71,8 +71,8 @@ bc=4
 btc=10
 btdc=9
 
+if ea<>0
 if _os$()="Windows"
-if wea<>0
 ac$="\xB0\xB0"
 sc$="\xDB\xDB"
 fc$="\xB2\xB2"
@@ -83,17 +83,6 @@ g4$="\xBC"
 g5$="\xCD"
 g6$="\xBA"
 else
-ac$="::"
-sc$="()"
-fc$="[]"
-g1$="."
-g2$="."
-g3$="'"
-g4$="'"
-g5$="-"
-g6$="|"
-endif
-else
 ac$="░░"
 sc$="██"
 fc$="▓▓"
@@ -103,6 +92,17 @@ g3$="╚"
 g4$="╝"
 g5$="═"
 g6$="║"
+endif
+else
+ac$="::"
+sc$="()"
+fc$="[]"
+g1$="."
+g2$="."
+g3$="'"
+g4$="'"
+g5$="-"
+g6$="|"
 endif
 
 _txtlock
@@ -218,8 +218,9 @@ gosub dredraw
 do
 resettimer
 k$=inkey$()
-if debug:ok$=k$:endif
 k=len(k$)
+if snip$(k$,k-1,k)="\e"|snip$(k$,k-1,k)="q":gosub _exit:endif
+if debug:ok$=k$:endif
 if _os$()<>"Windows"
 for i,0,i<k,1
 if asc(k$,i)=27
@@ -256,7 +257,7 @@ k=len(k$)
 nk$=""
 for i,0,i<k,1
 nc$=snip$(k$,i,i+1)
-if nc$="w"|nc$="a"|nc$="s"|nc$="d"|nc$="q"|nc$=" ":nk$=nk$+nc$:endif
+if nc$="w"|nc$="a"|nc$="s"|nc$="d"|nc$=" ":nk$=nk$+nc$:endif
 next
 k$=nk$
 do
@@ -271,7 +272,6 @@ elseif d<>0&gc$="s":d=1
 elseif d<>3&gc$="a":d=2
 elseif d<>2&gc$="d":d=3
 elseif gc$=" ":gosub pause
-elseif gc$="\e"|gc$="q":gosub _exit
 endif
 gc$=""
 gk$=snip$(gk$,1,)
