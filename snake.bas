@@ -37,8 +37,6 @@ debug = 0
 
 ############################################
 
-
-
 if width() < 46 | height() < 24: ?"Your terminal needs to be at least 46x24": exit 1: endif
 cls
 
@@ -48,15 +46,15 @@ tw=(w+2)*2+2:th=h+4
 
 if l<1: l=cint((w*h)/250):endif
 p=l-1
-dim x, l-1, w-1'cint(rand(w-1))
+dim x, l-1, cint(rand(w-1))
 dim y, l-1, cint(rand(h-1))
-dim a, w*h
+dim a, (w+1)*(h+1)
 fx=cint(rand(w-1))
 fy=cint(rand(h-1))
 ox=x[p]
 oy=y[p]
 s=0
-d=3'cint(rand(3))
+d=cint(rand(3))
 ms=abs(ms)
 sd=1
 
@@ -71,7 +69,7 @@ bc=4
 btc=10
 btdc=9
 
-if ea<>0
+if ea
 if _os$()="Windows"
 ac$="\xB0\xB0"
 sc$="\xDB\xDB"
@@ -94,9 +92,9 @@ g5$="═"
 g6$="║"
 endif
 else
-ac$="::"
-sc$="()"
-fc$="[]"
+ac$=",'"
+sc$="{}"
+fc$="()"
 g1$="."
 g2$="."
 g3$="'"
@@ -106,7 +104,6 @@ g6$="|"
 endif
 
 _txtlock
-_txtattrib "bold"
 if c=0: _txtattrib "fgc", 0: endif
 cc=fgc()
 
@@ -137,10 +134,6 @@ return
 @redraw
 color bc:locate 3,2:?g1$;g5$;g5$;:color btc:?" Snake for CLIBASIC ";:color bc:for dl,44,dl<tw,1:?g5$;:next:color btc:?" 2021 PQCraft ";:color bc:?g5$;g5$;g2$
 color ac
-'dx=fx:dy=y[p]
-'if a[dx+dy*w]=0:locate dx*2+4,dy+3:?ac$;:endif
-'dx=x[p]:dy=fy
-'if a[dx+dy*w]=0:locate dx*2+4,dy+3:?ac$;:endif
 gosub drawc
 locate 1,3
 for dy,0,dy<h,1
@@ -150,8 +143,11 @@ for dx,0,dx<w,1:if ~(dx=fx&dy=fy)|~(dx=x[p]&dy=y[p])|a[dx+dy*w]:rlocate 2:else:?
 else
 for dx,0,dx<w,1:if a[dx+dy*w]:rlocate 2:else:?ac$;:endif:next
 endif
-color bc:?g6$
+color bc
+?g6$
+'put "test"
 next
+'put "bruh"
 ?"  ";g3$;g5$;g5$;:color btc:?" Score: ";:s$=str$(s)+" ":dl=len(s$)+16:?s$;:color bc:for dl,dl,dl<tw,1:?g5$;:next:?g4$
 tp=p-1:if tp<0:tp=l-1:endif
 otx=x[p]:oty=y[p]
@@ -213,6 +209,7 @@ cls
 exit 'remove to enter the shadow realm
 endif
 
+wait 1
 o=0
 gosub dredraw
 do
