@@ -11,4 +11,4 @@ for y,0,y<16,1
     color 15,0
     print
 next
-exit
+exit 1
