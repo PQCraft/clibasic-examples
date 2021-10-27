@@ -209,7 +209,6 @@ cls
 exit 'remove to enter the shadow realm
 endif
 
-wait 1
 o=0
 gosub dredraw
 do
