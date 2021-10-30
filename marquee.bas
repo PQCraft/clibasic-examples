@@ -67,5 +67,3 @@ do
     endif
     if width()<>w:goto refresh:endif
 loop
-                                                                           
-                                                                            
