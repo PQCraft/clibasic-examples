@@ -38,7 +38,6 @@ debug = 0
 ############################################
 
 if width() < 46 | height() < 24: ?"Your terminal needs to be at least 46x24": exit 1: endif
-cls
 
 if w<1:w=int((width()-2)/2)-2:endif
 if h<1:h=height()-4:endif
@@ -121,8 +120,8 @@ return
 @dredraw
 color bc:locate 3,2:?g1$;g5$;g5$;:color btc:?" Snake for CLIBASIC ";:color bc:for dl,44,dl<tw,1:?g5$;:next:color btc:?" 2021 PQCraft ";:color bc:?g5$;g5$;g2$
 tmph=height():us=2000000/tmph
-locate 1,3:for dy,0,dy<h,1:tmpus=timeus():color bc:?"  ";g6$;:color ac:for dx,0,dx<w,1:?ac$;:next:color bc:?g6$:while timeus()-tmpus<us:if inkey$()<>"":us=0:endif:loop:next
-?"  ";g3$;g5$;g5$;:color btc:?" Score: ";:s$=str$(s)+" ":dl=len(s$)+16:?s$;:color bc:for dl,dl,dl<tw,1:?g5$;:next:?g4$
+locate 1,3:for dy,0,dy<h,1:tmpus=timeus():color bc:locate 3:?g6$;:color ac:for dx,0,dx<w,1:?ac$;:next:color bc:?g6$:while timeus()-tmpus<us:if inkey$()<>"":us=0:endif:loop:next
+locate 3:?g3$;g5$;g5$;:color btc:?" Score: ";:s$=str$(s)+" ":dl=len(s$)+16:?s$;:color bc:for dl,dl,dl<tw,1:?g5$;:next:?g4$
 tp=p-1:if tp<0:tp=l-1:endif
 otx=x[p]:oty=y[p]
 color sbc
@@ -137,7 +136,7 @@ color ac
 gosub drawc
 locate 1,3
 for dy,0,dy<h,1
-color bc:?"  ";g6$;:color ac
+color bc:locate 3:?g6$;:color ac
 if dy=fy|dy=y[p]
 for dx,0,dx<w,1:if ~(dx=fx&dy=fy)|~(dx=x[p]&dy=y[p])|a[dx+dy*w]:rlocate 2:else:?ac$;:endif:next
 else
@@ -148,7 +147,7 @@ color bc
 'put "test"
 next
 'put "bruh"
-?"  ";g3$;g5$;g5$;:color btc:?" Score: ";:s$=str$(s)+" ":dl=len(s$)+16:?s$;:color bc:for dl,dl,dl<tw,1:?g5$;:next:?g4$
+locate 3:?g3$;g5$;g5$;:color btc:?" Score: ";:s$=str$(s)+" ":dl=len(s$)+16:?s$;:color bc:for dl,dl,dl<tw,1:?g5$;:next:?g4$
 tp=p-1:if tp<0:tp=l-1:endif
 otx=x[p]:oty=y[p]
 color sbc
