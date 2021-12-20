@@ -2,11 +2,11 @@
 
 # -- config --
 direction$="L"
-inplace=0
+inplace=1
 padding=8
-delayms=0'95
-colors=1
-bg=1
+delayms=95
+colors=0
+bg=0
 # ------------
 if _argc()=0
     ostr$=input$("Text: ")

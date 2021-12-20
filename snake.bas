@@ -48,8 +48,6 @@ p=l-1
 dim x, l-1, cint(rand(w-1))
 dim y, l-1, cint(rand(h-1))
 dim a, (w+1)*(h+1)
-fx=cint(rand(w-1))
-fy=cint(rand(h-1))
 ox=x[p]
 oy=y[p]
 s=0
@@ -168,8 +166,7 @@ return
 @score
 sd=1
 s=s+1
-fx=cint(rand(w-1))
-fy=cint(rand(h-1))
+gosub frand
 dim nx, l
 dim ny, l
 nx[0]=ox
@@ -192,6 +189,20 @@ ac=tac
 gosub redraw
 resettimer
 return
+@frand.rand
+fx=cint(rand(w-1))
+fy=cint(rand(h-1))
+return
+@frand
+gosub frand.rand
+ii=-1
+for i,0,i<l,1
+if x[i]=fx&y[i]=fy:ii=i:break:endif
+next
+if ii>=0
+if x[ii]=fx&y[ii]=fy:goto frand:endif
+endif
+return
 @_exit
 tmph=height()
 us=2000000/tmph
@@ -209,6 +220,7 @@ exit 'remove to enter the shadow realm
 endif
 
 o=0
+gosub frand
 gosub dredraw
 do
 resettimer

@@ -11,5 +11,5 @@ _txtattrib "bgc", "on"
 color , c
 put "  "
 _txtattrib "truecolor", "off"
+_txtattrib "bgc", "off"
 print
-

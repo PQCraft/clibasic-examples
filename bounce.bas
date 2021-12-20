@@ -36,4 +36,3 @@ do
         waitms 20 * v
     next
 loop
-

@@ -1,11 +1,16 @@
 #!/usr/bin/env clibasic
 #You will need the blockpix CLIBASIC extension
 
-_TXTLOCK
+SUB LEXT
+    IF _ARG$(2)="":LEXT.E=1:ELSE:LEXT.E=VAL(_ARG$(2)):ENDIF
+    IF _OS$()="Windows":LEXT.T$=".dll":ELSE:LEXT.T$=".so":ENDIF
+    LEXT.E$=_ARG$(1)+LEXT.T$
+    IF LOADEXT("./"+LEXT.E$)=0:IF LOADEXT(DIRNAME$(_STARTCMD$())+LEXT.E$)=0:IF LOADEXT(LEXT.E$)=0:PRINT "Could not find ";LEXT.E$;".":EXIT LEXT.E:ENDIF:ENDIF:ENDIF
+ENDSUB
 
-IF _OS$()="Windows":T$=".dll":ELSE:T$=".so":ENDIF
-E$="cbextblockpix"+T$
-IF LOADEXT("./"+E$)=0:IF LOADEXT(DIRNAME$(_STARTCMD$())+E$)=0:IF LOADEXT(E$)=0:PRINT "Could not find ";E$;".":EXIT 1:ENDIF:ENDIF:ENDIF
+CALLSUB LEXT, "cbextblockpix"
+
+_TXTLOCK
 
 IF BP.INIT()=0:PRINT "Could not init blockpix.":EXIT 1:ENDIF
 
