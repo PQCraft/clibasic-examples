@@ -16,7 +16,6 @@ PD=0
 OC=-1
 IF 0
     @OUT.OUT
-        #?"OC:";OC;":";
         IF OC=ON&D>=5:OD=OD+1:ENDIF
         IF OND=0:PRINT OD;:RETURN:ENDIF
         IF OD=0:RETURN:ENDIF
@@ -24,7 +23,7 @@ IF 0
         ND=0
     RETURN
     @OUT
-        IF OC>0:GOSUB OUT.OUT:REM ?:ENDIF
+        IF OC>0:GOSUB OUT.OUT:ENDIF
         OND=ND
         OD=D
         OC=OC+1
@@ -40,7 +39,6 @@ T=0
 
 FOR J,1,J<=N,1
     @LOOP
-    #?"LOOP"
     Q=0
     FOR I,LN,I>0,-1
         X=10*A[I-1]+Q*I
